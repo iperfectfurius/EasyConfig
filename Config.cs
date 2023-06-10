@@ -16,10 +16,10 @@ namespace EasyConfig
         private Dictionary<(string,string),string> DefaultConfig = null;
         public IniData? ConfigData { get => configData; }
 
-        public Config(string ProjectName, string ConfigName = CONFIG_NAME, Dictionary<(string, string), string>? defaultConfig = null)
+        public Config(string FolderName = "", string ConfigName = CONFIG_NAME, Dictionary<(string, string), string>? defaultConfig = null)
         {
-            if (string.IsNullOrWhiteSpace(ProjectName)) ProjectName = Assembly.GetCallingAssembly().GetName().Name;
-            folderApplication += $"\\{ProjectName}";
+            if (string.IsNullOrWhiteSpace(FolderName)) FolderName = Assembly.GetCallingAssembly().GetName().Name;
+            folderApplication += $"\\{FolderName}";
             fullPathConfig = folderApplication + "\\" + ConfigName;
 
             DefaultConfig = defaultConfig ?? new Dictionary<(string, string), string>();
@@ -65,21 +65,15 @@ namespace EasyConfig
             {
                 (string key1, string key2 ) = (entry.Key.Item1, entry.Key.Item2);
                 configData[key1][key2] = entry.Value;
-                Debug.WriteLine(entry);
-
             }
+
             return true;
         }
-        public static void DeleteFileConfig(Config ConfigFile ,Dictionary<(string, string), string>? defaultConfig = null)
+        public static void DeleteFileConfig(Config ConfigFile,bool ResetConfigMemory = false)
         {          
             File.Delete(ConfigFile.fullPathConfig);
 
-            if (defaultConfig != null || defaultConfig?.Count != 0)
-            {
-                //DefaultConfig = defaultConfig;
-                ConfigFile.DefaultConfig = defaultConfig;
-            }
-
+            if (ResetConfigMemory) ConfigFile.ResetConfig();
         }
         public bool SaveConfig()
         {
