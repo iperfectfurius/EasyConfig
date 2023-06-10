@@ -13,14 +13,14 @@ namespace EasyConfig
         private IniData? configData;
         private readonly FileIniDataParser iniDataParser = new FileIniDataParser();
         private bool isLoaded = false;
-        private Dictionary<(string,string),string> DefaultConfig;
+        private Dictionary<(string,string),string> DefaultConfig = null;
         public IniData? ConfigData { get => configData; }
 
-        public Config(string ProjectName, string ConfigName = CONFIG_NAME, Dictionary<(string, string), string> defaultConfig = null)
+        public Config(string ProjectName, string ConfigName = CONFIG_NAME, Dictionary<(string, string), string>? defaultConfig = null)
         {
             if (string.IsNullOrWhiteSpace(ProjectName)) ProjectName = Assembly.GetCallingAssembly().GetName().Name;
             folderApplication += $"\\{ProjectName}";
-            fullPathConfig = folderApplication + "\\" + CONFIG_NAME;
+            fullPathConfig = folderApplication + "\\" + ConfigName;
 
             DefaultConfig = defaultConfig ?? new Dictionary<(string, string), string>();
 
@@ -56,23 +56,34 @@ namespace EasyConfig
             isLoaded = true;
             return true;
         }
-        public bool ResetConfig(Dictionary<(string, string), string> defaultConfig = null)
+        public bool ResetConfig(Dictionary<(string, string), string>? defaultConfig = null)
         {
-            if (defaultConfig == null) return false;
+            configData = new IniData();
+            if (defaultConfig == null || defaultConfig.Count == 0) return false;
 
-            foreach (var key in defaultConfig.Keys)
+            foreach (KeyValuePair<(string, string), string> entry in defaultConfig)
             {
-                foreach (var value in defaultConfig[key])
-                {
-                    Debug.WriteLine(defaultConfig[key][value]);
-                }
+                (string key1, string key2 ) = (entry.Key.Item1, entry.Key.Item2);
+                configData[key1][key2] = entry.Value;
+                Debug.WriteLine(entry);
+
             }
-            //foreach (KeyValuePair<(string, string),string> entry in defaultConfig)
-            //{
+            return true;
+        }
+        public static void DeleteFileConfig(Config ConfigFile ,Dictionary<(string, string), string>? defaultConfig = null)
+        {          
+            File.Delete(ConfigFile.fullPathConfig);
 
+            if (defaultConfig != null || defaultConfig?.Count != 0)
+            {
+                //DefaultConfig = defaultConfig;
+                ConfigFile.DefaultConfig = defaultConfig;
+            }
 
-            //        configData[entry.Key][entry.Value] = defaultConfig[entry.Key,entry.Value];
-            //}
+        }
+        public bool SaveConfig()
+        {
+            iniDataParser.WriteFile(fullPathConfig, configData);
             return true;
         }
     }
