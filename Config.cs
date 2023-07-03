@@ -2,13 +2,15 @@
 using IniParser.Model;
 using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace EasyConfig
 {
     public class Config
     {
         private readonly string folderApplication = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString();
-        private const string CONFIG_NAME = "Config.ini";
+        private const string CONFIG_NAME = "Config";
+        private const string EXTENSION = ".ini";
         private string? fullPathConfig;
         private IniData? configData;
         private readonly FileIniDataParser iniDataParser = new FileIniDataParser();
@@ -19,12 +21,17 @@ namespace EasyConfig
         public Config(string FolderName = "", string ConfigName = CONFIG_NAME, Dictionary<(string, string), string>? defaultConfig = null)
         {
             if (string.IsNullOrWhiteSpace(FolderName)) FolderName = Assembly.GetCallingAssembly().GetName().Name;
-            folderApplication += $"\\{FolderName}";
-            fullPathConfig = folderApplication + "\\" + ConfigName;
+
+            folderApplication += $"\\{ReplaceInvalidChars(FolderName)}";
+            fullPathConfig = folderApplication + "\\" + ReplaceInvalidChars(ConfigName) + EXTENSION;
 
             DefaultConfig = defaultConfig ?? new Dictionary<(string, string), string>();
 
             LoadConfig();
+        }
+        private string ReplaceInvalidChars(string filename)
+        {
+            return string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
         }
         private void LoadConfig()
         {
@@ -32,6 +39,7 @@ namespace EasyConfig
             if (!File.Exists(fullPathConfig)) CreateConfigFile();
 
             if (!isLoaded) LoadConfigFile();
+
         }
         private bool CreateConfigDirectory()
         {
@@ -79,6 +87,10 @@ namespace EasyConfig
         {
             iniDataParser.WriteFile(fullPathConfig, configData);
             return true;
+        }
+        public void OpenConfig()
+        {
+            Process.Start(new ProcessStartInfo(fullPathConfig) { UseShellExecute = true });
         }
     }
 }
