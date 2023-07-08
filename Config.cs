@@ -92,5 +92,6 @@ namespace EasyConfig
         {
             Process.Start(new ProcessStartInfo(fullPathConfig) { UseShellExecute = true });
         }
+        
     }
 }
