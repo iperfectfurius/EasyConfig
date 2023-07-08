@@ -6,10 +6,15 @@
     <Nullable>enable</Nullable>
     <AssemblyVersion>1.0.1</AssemblyVersion>
     <FileVersion>1.0.1</FileVersion>
+    <AssemblyName>EasyConfigIni</AssemblyName>
+	 <Authors>Adrián Garcia Trias</Authors>
+	<Copyright>Adrián Garcia Trias 2023-2023</Copyright>
+	 <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="ini-parser" Version="2.5.2" />
+	  <None Include="docs\readme.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
