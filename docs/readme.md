@@ -30,9 +30,6 @@ Config(string FolderName,string ConfigFileName,Dictionary<(string, string), stri
 		[section]
 		configurationName=This is a test
 */
-		
-		
-		
 ```
 		
 
