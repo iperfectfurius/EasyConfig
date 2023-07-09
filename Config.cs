@@ -2,8 +2,6 @@
 using IniParser.Model;
 using System.Diagnostics;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace EasyConfig
 {
