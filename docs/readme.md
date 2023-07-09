@@ -39,10 +39,17 @@ Config(string FolderName,string ConfigFileName,Dictionary<(string, string), stri
 		configurationName=This is a test
 */
 ```
+
+#### Other Methods
+
+* `DeleteFileConfig(Config ConfigFile)` (Static)
+* `OpenConfig()` Open current config file.
+* `ResetConfig()` Reset the memory config.
 		
 ### Notes
 
 **If you want to use multiple configurations on the same project you will need to specify a name for each configuration you need.**
+
 ## Dependencies
 
  * Ini-parser by [rickyah](https://www.nuget.org/profiles/rickyah)
