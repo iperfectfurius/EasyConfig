@@ -2,7 +2,6 @@
 using IniParser.Model;
 using System.Diagnostics;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace EasyConfig
 {
@@ -16,9 +15,9 @@ namespace EasyConfig
         private readonly FileIniDataParser iniDataParser = new FileIniDataParser();
         private bool isLoaded = false;
         private Dictionary<(string,string),string> DefaultConfig = null;
+        
         public IniData? ConfigData { get => configData; }
-
-        public Config(string FolderName = "", string ConfigName = CONFIG_NAME, Dictionary<(string, string), string>? defaultConfig = null)
+        public Config(string FolderName = "", string ConfigName = CONFIG_NAME, Dictionary<(string, string), string>? defaultConfig = null,bool AutoSave = true)
         {
             if (string.IsNullOrWhiteSpace(FolderName)) FolderName = Assembly.GetCallingAssembly().GetName().Name;
 
@@ -28,7 +27,15 @@ namespace EasyConfig
             DefaultConfig = defaultConfig ?? new Dictionary<(string, string), string>();
 
             LoadConfig();
+
+            if (AutoSave) AppDomain.CurrentDomain.ProcessExit +=  HookExit;
         }
+
+        private void HookExit(object? sender, EventArgs e)
+        {
+            SaveConfig();
+        }
+
         private string ReplaceInvalidChars(string filename)
         {
             return string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
