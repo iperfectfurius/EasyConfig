@@ -15,13 +15,14 @@ namespace EasyConfig
         private readonly FileIniDataParser iniDataParser = new FileIniDataParser();
         private bool isLoaded = false;
         private Dictionary<(string,string),string> DefaultConfig = null;
-        
+        public readonly string DirectoryConfig;
         public IniData? ConfigData { get => configData; }
         public Config(string FolderName = "", string ConfigName = CONFIG_NAME, Dictionary<(string, string), string>? defaultConfig = null,bool AutoSave = true)
         {
             if (string.IsNullOrWhiteSpace(FolderName)) FolderName = Assembly.GetCallingAssembly().GetName().Name;
 
             folderApplication += $"\\{ReplaceInvalidChars(FolderName)}";
+            DirectoryConfig = folderApplication;
             fullPathConfig = folderApplication + "\\" + ReplaceInvalidChars(ConfigName) + EXTENSION;
 
             DefaultConfig = defaultConfig ?? new Dictionary<(string, string), string>();
