@@ -18,7 +18,7 @@ You can save manually if `SaveConfig()` is called.
 
 * string FolderName
 * string ConfigFileName
-* Dictionary<(string, string), string>
+* Dictionary<(string, string), string> Default config
 * bool AutoSave
 
 Config(string FolderName,string ConfigFileName,Dictionary<(string, string), string> DefaultConfig,bool AutoSave)
