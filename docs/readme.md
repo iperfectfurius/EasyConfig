@@ -49,6 +49,7 @@ Config(string FolderName,string ConfigFileName,Dictionary<(string, string), stri
 ### Notes
 
 **If you want to use multiple configurations on the same project you will need to specify a name for each configuration you need.**
+It's possible that you may need to use `Environment.Exit(1);` to close the application properly or disable auto-saving.
 
 ## Dependencies
 
